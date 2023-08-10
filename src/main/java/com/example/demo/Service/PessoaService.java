@@ -38,6 +38,17 @@ public class PessoaService {
     }
 
 
+    public Pessoa atualizarPessoa(Long id, Pessoa pessoaAtualizado) {
+        Pessoa pessoaExistente = PessoaRepository.findById(id).orElse(null);
+        if (pessoaExistente == null) {
+            return null;
+        } else {
+            pessoaExistente.setNome(pessoaAtualizado.getNome());
+            return PessoaRepository.save(pessoaExistente);
+        }
+    }
+
+
 
 
 }
