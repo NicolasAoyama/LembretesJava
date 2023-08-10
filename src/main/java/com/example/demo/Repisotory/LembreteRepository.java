@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface LembreteRepository extends JpaRepository<Lembretes, Long> {
 
-    @Query(value = "select exists (select * from Lembretes where id = :id)", nativeQuery = true)
+    @Query(value = "select exists (select * from lembretes where id = :id)", nativeQuery = true)
     boolean idExistente(@Param("id") final Long id);
 
 

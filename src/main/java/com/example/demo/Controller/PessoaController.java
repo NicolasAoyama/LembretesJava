@@ -31,8 +31,8 @@ public class PessoaController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
-    @GetMapping
-    public ResponseEntity<?> idPessoas(@RequestParam("id") final Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> idPessoas(@PathVariable final Long id){
         try{
             return ResponseEntity.ok(PessoaService.procurarPessoa(id));
         } catch (Exception e){

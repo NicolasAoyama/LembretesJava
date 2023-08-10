@@ -1,7 +1,6 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Entity.Lembretes;
-import com.example.demo.Entity.Pessoa;
 import com.example.demo.Repisotory.LembreteRepository;
 import com.example.demo.Service.LembreteService;
 import org.antlr.v4.runtime.misc.NotNull;
@@ -31,8 +30,8 @@ public class LembreteController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
-    @GetMapping
-    public ResponseEntity<?> idLembretes(@RequestParam("id") final Long id){
+    @GetMapping("/{id}")
+    public ResponseEntity<?> idLembretes(@PathVariable final Long id){
         try{
             return ResponseEntity.ok(lembreteService.procurarLembrete(id));
         } catch (Exception e){
@@ -43,7 +42,7 @@ public class LembreteController {
     public ResponseEntity<?> cadastrarLembrete(@RequestBody final Lembretes lembretes){
         try{
             this.lembreteService.cadastrarLembrete(lembretes);
-            return ResponseEntity.ok("Condutor cadastrado");
+            return ResponseEntity.ok("Lembrete cadastrado");
         } catch (Exception e){
             return ResponseEntity.badRequest().body("Erro: " + e.getMessage());
         }
@@ -54,10 +53,10 @@ public class LembreteController {
 
         if (lembreteExistente.isPresent()) { //not null
 
-            //atribui o valor presente dentro do Optional chamado condutorExistente para a variável condutorAtualizado.
+            //atribui o valor presente dentro do Optional chamado LembreteExistente para a variável LembreteAtualizado.
             Lembretes lembreteAtualizado = lembreteExistente.get();
 
-            //chama atualizarCondutor passando o ID do condutor atualizado e o objeto condutor que vai ser usado pra atualizar os dados
+            //chama atualizarLembrete passando o ID do Lembrete atualizado e o objeto Lembrete que vai ser usado pra atualizar os dados
             lembreteService.atualizarLembrete(lembreteAtualizado.getId(), lembretes);
 
             return ResponseEntity.ok().body("Registro atualizado com sucesso");
@@ -74,7 +73,7 @@ public class LembreteController {
             Lembretes lembretes = optionalLembretes.get();
 
             lembreteRepository.delete(lembretes);
-            return ResponseEntity.ok().body("O registro do condutor foi deletado com sucesso");
+            return ResponseEntity.ok().body("O registro do Lembrete foi deletado com sucesso");
         }
         else {
             return ResponseEntity.notFound().build();
