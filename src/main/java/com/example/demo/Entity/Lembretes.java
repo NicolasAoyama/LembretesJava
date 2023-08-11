@@ -1,41 +1,25 @@
 package com.example.demo.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.example.demo.Entity.AbstractEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
 
 @Entity
-@Table(name = "lembretes")
-public class Lembretes {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+@Getter @Setter
+@Table(name = "lembrete",schema = "public")
+public class Lembretes extends AbstractEntity {
+    @ManyToOne
+    @JoinColumn(name = "pessoa_id",nullable = false)
+    @JsonBackReference
+    private Pessoa pessoa;
+    @Column(name = "lembrete",nullable = false,length = 100)
     private String lembrete;
 
-    public Lembretes() {};
-
-    public Lembretes(Long id, String nome) {
-        this.id = id;
-        this.lembrete = lembrete;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLembrete() {
-        return lembrete;
-    }
-
-    public void setLembrete(String nome) {
-        this.lembrete = lembrete;
-    }
+    @Column(name = "tarefas",nullable = false,length = 100)
+    private List<String> tarefas;
 
 }

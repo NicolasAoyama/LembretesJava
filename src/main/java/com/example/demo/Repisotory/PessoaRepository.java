@@ -4,11 +4,15 @@ import com.example.demo.Entity.Pessoa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
+import java.util.List;
 
-    @Query(value = "select exists (select * from Pessoa where id = :id)", nativeQuery = true)
-    boolean idExistente(@Param("id") final Long id);
+@Repository
+public interface PessoaRepository extends JpaRepository<Pessoa,Long> {
+
+    @Query("SELECT p FROM Pessoa p WHERE p.Nome = :NomePessoa")
+    List<Pessoa> findByNome(@Param("NomePessoa") String NomePessoa);
 
 
 

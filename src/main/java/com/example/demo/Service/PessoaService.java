@@ -1,54 +1,37 @@
 package com.example.demo.Service;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.example.demo.Entity.Pessoa;
 import com.example.demo.Repisotory.PessoaRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+
+import java.util.List;
+
 
 @Service
 public class PessoaService {
-
     @Autowired
-    private PessoaRepository PessoaRepository;
-
-    public List<Pessoa> findAll(){
-        return PessoaRepository.findAll();
+    private PessoaRepository Repository;
+    public List<Pessoa> listartudo(){
+        return Repository.findAll();
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public Pessoa cadastrar(Pessoa cadastrar) {
+        Assert.notNull(cadastrar.getNome(), "Error, campo nome vazio");
+        return this.Repository.save(cadastrar);
     }
 
-    public Optional<Pessoa> procurarPessoa(Long id){
-        if (!PessoaRepository.idExistente(id) ){
-            throw new RuntimeException("Esse ID nao esta no banco de dados, verifique e tente novamente");
-        }else {
-            Optional<Pessoa> pessoa = this.PessoaRepository.findById(id);
-            return pessoa;
-        }
+    @Transactional(rollbackFor = Exception.class)
+    public void atualizar(Long id, Pessoa atualizar) {
+        final Pessoa marcaBanco = this.Repository.findById(atualizar.getId()).orElse(null);
+        Assert.isTrue(marcaBanco.getId().equals(id) ,"Error id da URL diferente do body");
+        Assert.isTrue(marcaBanco == null || marcaBanco.getId().equals(atualizar.getId()),"nao identificado o registro informado");
+        this.Repository.save(atualizar);
     }
 
-    @Transactional(rollbackOn = Exception.class)
-    public void cadastrarPessoa(final Pessoa pessoa){
-        if(pessoa.getNome() == null){
-            throw new RuntimeException("Insira um nome e tente novamente");
-        } else {
-            PessoaRepository.save(pessoa);
-        }
+    public List<Pessoa> achaNome(String nomePessoa) {
+        return Repository.findByNome(nomePessoa);
     }
-
-
-    public Pessoa atualizarPessoa(Long id, Pessoa pessoaAtualizado) {
-        Pessoa pessoaExistente = PessoaRepository.findById(id).orElse(null);
-        if (pessoaExistente == null) {
-            return null;
-        } else {
-            pessoaExistente.setNome(pessoaAtualizado.getNome());
-            return PessoaRepository.save(pessoaExistente);
-        }
-    }
-
-
-
-
 }

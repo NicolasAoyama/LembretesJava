@@ -4,11 +4,16 @@ import com.example.demo.Entity.Lembretes;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
-public interface LembreteRepository extends JpaRepository<Lembretes, Long> {
+import java.util.List;
+@Repository
 
-    @Query(value = "select exists (select * from lembretes where id = :id)", nativeQuery = true)
-    boolean idExistente(@Param("id") final Long id);
+public interface LembreteRepository extends JpaRepository<Lembretes,Long> {
+    @Query("SELECT l FROM Lembrete l " +
+            "JOIN l.pessoa p " +
+            "WHERE p.Nome = :NomePessoa")
+    List<Lembretes> findByNome(@Param("NomePessoa") String NomePessoa);
 
 
 
