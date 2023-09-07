@@ -1,5 +1,7 @@
 package com.example.demo.Service;
 
+import com.example.demo.DTO.PessoaConverter;
+import com.example.demo.DTO.PessoaDTO;
 import com.example.demo.Entity.Pessoa;
 import com.example.demo.Repisotory.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 

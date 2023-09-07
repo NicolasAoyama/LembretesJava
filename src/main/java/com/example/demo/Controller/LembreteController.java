@@ -34,12 +34,25 @@ public class LembreteController {
         return ResponseEntity.ok(listarnome);
     }
 
+
     @GetMapping("/lista/id/{id}")
     public ResponseEntity<?> listaId(@PathVariable(value = "id") Long id){
         Lembretes listarid = Repository.findById(id).orElse(null);
         return listarid == null
                 ? ResponseEntity.badRequest().body(" <<ERRO>>: valor nao encontrado.")
                 : ResponseEntity.ok(listarid);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> teste(@PathVariable Long id){
+        Optional<Lembretes> optionalLembrete = Repository.findById(id);
+
+        if (optionalLembrete.isPresent()) {
+            Lembretes lembrete = optionalLembrete.get();
+            return ResponseEntity.ok(lembrete);
+        } else {
+            return ResponseEntity.badRequest().body(" <<ERRO>>: valor nao encontrado.");
+        }
     }
     @PostMapping("/cadastrar")
     public ResponseEntity<?> cadastrar(@RequestBody Lembretes cadastro){

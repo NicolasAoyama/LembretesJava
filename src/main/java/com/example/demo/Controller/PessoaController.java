@@ -1,5 +1,7 @@
 package com.example.demo.Controller;
 
+import com.example.demo.DTO.PessoaConverter;
+import com.example.demo.DTO.PessoaDTO;
 import com.example.demo.Entity.Pessoa;
 import com.example.demo.Repisotory.PessoaRepository;
 import com.example.demo.Service.PessoaService;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,12 +25,26 @@ public class PessoaController {
     private PessoaService Service;
 
     @GetMapping("/lista")
-    public ResponseEntity<List<Pessoa>> lista(){
-        List<Pessoa> listartudo = Service.listartudo();
-        return ResponseEntity.ok(listartudo);
+    public ResponseEntity<List<PessoaDTO>> lista(){
+        List<Pessoa> listaPessoas = Service.listartudo();
+
+        List<PessoaDTO> listaPessoaDTOs = new ArrayList<>();
+        for (Pessoa pessoa : listaPessoas) {
+            PessoaDTO pessoaDTO = PessoaConverter.convertPessoaToDTO(pessoa);
+            listaPessoaDTOs.add(pessoaDTO);
+        }
+
+        return ResponseEntity.ok(listaPessoaDTOs);
     }
     @GetMapping("/lista/id/{id}")
     public ResponseEntity<?> listaId(@PathVariable(value = "id") Long id){
+        Pessoa listarid = Repository.findById(id).orElse(null);
+        return listarid == null
+                ? ResponseEntity.badRequest().body(" <<ERRO>>: valor nao encontrado.")
+                : ResponseEntity.ok(listarid);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> teste(@PathVariable Long id){
         Pessoa listarid = Repository.findById(id).orElse(null);
         return listarid == null
                 ? ResponseEntity.badRequest().body(" <<ERRO>>: valor nao encontrado.")
@@ -62,6 +79,15 @@ public class PessoaController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
+    @GetMapping("/lista/pessoa/{nome}")
+    public ResponseEntity<List<Pessoa>> nameSearch(@PathVariable(value = "nome") String nomePessoa){
+        List<Pessoa> listarNome = Service.achaNome(nomePessoa);
+        return ResponseEntity.ok(listarNome);
+    }
+
+
     @PutMapping("/put/id/{id}")
     public ResponseEntity<?> atualizar( @PathVariable Long id, @RequestBody Pessoa atualizarId) {
         try {

@@ -18,7 +18,6 @@ public class Lembretes extends AbstractEntity {
     private Pessoa pessoa;
     @Column(name = "lembrete",nullable = false,length = 100)
     private String lembrete;
-
     @Column(name = "tarefas",nullable = false,length = 100)
     private List<String> tarefas;
 
